@@ -14,7 +14,7 @@ export default function ArtworksTable() {
 
   const { selectedIds, selectAll, deselectAll, customSelect } = usePersistentSelection()
 
-  // Fetch data from API whenever page changes
+  
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
@@ -32,12 +32,15 @@ export default function ArtworksTable() {
     fetchArtworks()
   }, [page])
 
-  // Pagination handler
-  const onPage = (e: DataTablePageEvent) => {
-    if (e.page !== undefined) setPage(e.page + 1)
-  }
 
-  // Handle row selection change
+ const onPage = (e: DataTablePageEvent) => {
+  if (e.page !== undefined) {
+    const nextPage = e.page + 1; 
+    setPage(nextPage);
+  }
+};
+
+
   const onSelectionChange = (e: { value: Artwork[] }) => {
     const selected = e.value
     const ids = artworks.map(a => a.id)
@@ -45,7 +48,7 @@ export default function ArtworksTable() {
     selectAll(selected.map(a => a.id))
   }
 
-  // Determine which rows are selected for current page
+ 
   const selectedRows = artworks.filter(a => selectedIds.has(a.id))
 
   return (
@@ -58,14 +61,11 @@ export default function ArtworksTable() {
         />
       </div>
 
-      {/* @ts-expect-error temporary PrimeReact typing issue */}
+    
+{/* @ts-expect-error temporary PrimeReact typing issue */}
 <DataTable
   value={artworks}
   paginator
-  paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-  currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-  paginatorLeft={null}
-  paginatorRight={null}
   rows={rows}
   totalRecords={totalRecords}
   dataKey="id"
@@ -75,16 +75,19 @@ export default function ArtworksTable() {
   onSelectionChange={onSelectionChange}
   loading={loading}
   tableStyle={{ minWidth: '60rem' }}
-  paginatorClassName="justify-content-between"
+  paginatorTemplate="CurrentPageReport PrevPageLink PageLinks NextPageLink"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  paginatorClassName="justify-content-between align-items-center"
 >
   <Column selectionMode="multiple" headerStyle={{ width: '3rem' }} />
   <Column field="title" header="Title" />
-  <Column field="place_of_origin" header="Origin" />
+  <Column field="place_of_origin" header="Place of Origin" />
   <Column field="artist_display" header="Artist" />
   <Column field="inscriptions" header="Inscriptions" />
-  <Column field="date_start" header="Start" />
-  <Column field="date_end" header="End" />
+  <Column field="date_start" header="Start Date" />
+  <Column field="date_end" header="End Date" />
 </DataTable>
+
 
     </div>
   )
